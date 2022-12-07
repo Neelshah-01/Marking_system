@@ -1,7 +1,7 @@
 #include <iostream>
 #include <vector>
+#include <map>
 #include <fstream>
-
 using namespace std;
 /* t1 and t2 are of 20 marks
     Final Exam exam is of 80 marks*/
@@ -59,16 +59,6 @@ class Test : public Student
     int acad_yr;
     int tstMM = 20, fnlMM = 80;
     string classnm;
-
-public:
-    Test()
-    {
-    }
-    Test(int yr, string cnm, Student &t)
-    {
-        acad_yr = yr;
-        classnm = cnm;
-    }
 
     void enterMarks(Student &t)
     {
@@ -220,7 +210,6 @@ public:
             else
                 cout << "Invalid Mark! Try again\n";
         }
-
         while (true)
         {
             cout << "Enter Marks obtained in Social Studies in test 1 : ";
@@ -257,6 +246,17 @@ public:
             else
                 cout << "Invalid Mark! Try again\n";
         }
+    }
+
+public:
+    Test()
+    {
+    }
+    Test(int yr, string cnm, Student &t)
+    {
+        acad_yr = yr;
+        classnm = cnm;
+        enterMarks(t);
     }
 };
 
@@ -336,14 +336,9 @@ public:
 
 class Storage : public Result
 {
-    void sortData()
-    {
-        
-    }
+    map<int, Student> data;
+
 public:
-    Storage()
-    {
-    }
     void writeFile(Student &t)
     {
         Result o(t);
@@ -374,26 +369,56 @@ public:
         fio << "\n\n";
         fio.close();
     }
-};
-class Json
-{
+    Storage()
+    {
+        while (1)
+        {
+            string name, fname, mname, add1, add2, add3;
+            int roll;
+            long long int phone_num;
+            cout << "\nEnter roll number: ";
+            cin >> roll;
+            cout << "Enter student's name: ";
+            getline(cin >> ws, name);
+            cout << "Enter student's father's name: ";
+            getline(cin >> ws, fname);
+            cout << "Enter student's mother's name: ";
+            getline(cin >> ws, mname);
+            cout << "Enter student's phone number: ";
+            cin >> phone_num;
+            cout << "Enter students address in 3 lines below\n";
+            cin >> ws;
+            getline(cin, add1);
+            getline(cin, add2);
+            getline(cin, add3);
+            Student stu(roll, name, fname, mname, phone_num, add1 + ", " + add2 + ", " + add3);
+            cout << "Enter academic year: ";
+            cin >> roll;
+            cout << "Enter class name: ";
+            string c_name;
+            getline(cin >> ws, c_name); // using old one instead of creating a new variable
 
+            Test obj(roll, c_name, stu);
+            data[roll] = stu;
+
+            cout << "Do you want to add more students? (Y/n) ";
+            char choice;
+            cin >> choice; // using old one instead of creating a new variable
+            if (!(choice == 'y' || choice == 'Y'))
+                break;
+        }
+        for (auto it = data.begin(); it != data.end(); it++)
+        {
+            writeFile(it->second);
+        }
+    }
 };
 int main()
 {
-    //testing
-    Student obj1(1, "Rishabh singh", "rksingh", "ssingh", 784512, "shxjhs");
-    Student obj2(2, "aca", "Sef", "Svf", 8465, "Esff");
-    Test hj1(22, "ece 2", obj1);
-
-    Test hj2(22, "ece 2", obj2);
-
-    hj1.enterMarks(obj1);
-    hj2.enterMarks(obj2);
-    // Result op;
-    Storage oj;
-    oj.writeFile(obj1);
-    oj.writeFile(obj2);
-
+    FILE *fp;
+    fp = fopen("storage.dat", "w"); // creates a file if it doesnt exist already
+    fclose(fp);
+    Storage obj;
+    cout << "\nThank You\n";
     return 0;
 }
