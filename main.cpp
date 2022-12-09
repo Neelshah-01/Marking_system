@@ -10,7 +10,7 @@ class Student
 
 protected:
     vector<vector<string>> marks;
-    int ph_no;
+    long long int ph_no;
     string fname, name, mname, address;
     int roll_no;
     float per;
@@ -25,7 +25,7 @@ public:
         address = mname = fname = name = "";
         per = roll_no = ph_no = 0;
     }
-    Student(int roll, string n, string fn, string mn, int ph, string ad)
+    Student(int roll, string n, string fn, string mn, long long int ph, string ad)
     {
         marks.push_back(vector<string>()); // making row for subject
         marks.push_back(vector<string>()); // making row for unit test 1 marks
@@ -339,7 +339,7 @@ class Storage : public Result
     map<int, Student> data;
 
 public:
-    void writeFile(Student &t)
+    void writeFile(Student &t,string cname, int ayr)
     {
         Result o(t);
         fstream fio;
@@ -349,7 +349,7 @@ public:
             << "Father's Name : " << t.fname << "\t\t\t"
             << "Mother's Name : " << t.mname << "\n";
         fio << "Roll no : " << t.roll_no << "\t\t\t"
-            << "Phone : " << t.ph_no << "\t\t\nAddress : " << t.address;
+            << "Phone : " << t.ph_no << "\t\tClass : "<< cname << "\t\tYear : " << ayr<< "\t\t\nAddress : " << t.address;
 
         fio << "\n\nMarks obtained : \n+---------------+----------+----------+----------+-------+\n|    Subject \t|  Test 1  |  Test 2  |  Finals  | Grade |\n";
         fio << "+---------------+----------+----------+----------+-------+\n";
@@ -371,11 +371,12 @@ public:
     }
     Storage()
     {
+        string name, fname, mname, add1, add2, add3;
+        int roll,acad_yr;
+        long long int phone_num;
+        string c_name;
         while (1)
         {
-            string name, fname, mname, add1, add2, add3;
-            int roll;
-            long long int phone_num;
             cout << "\nEnter roll number: ";
             cin >> roll;
             cout << "Enter student's name: ";
@@ -393,9 +394,8 @@ public:
             getline(cin, add3);
             Student stu(roll, name, fname, mname, phone_num, add1 + ", " + add2 + ", " + add3);
             cout << "Enter academic year: ";
-            cin >> roll;
+            cin >> acad_yr;
             cout << "Enter class name: ";
-            string c_name;
             getline(cin >> ws, c_name); // using old one instead of creating a new variable
 
             Test obj(roll, c_name, stu);
@@ -409,7 +409,7 @@ public:
         }
         for (auto it = data.begin(); it != data.end(); it++)
         {
-            writeFile(it->second);
+            writeFile(it->second,c_name,acad_yr);
         }
     }
 };
